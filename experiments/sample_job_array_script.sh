@@ -13,7 +13,7 @@
 #SBATCH --output=sbl_%A_%a.out # %A is SLURM_ARRAY_JOB_ID, %a is SLURM_ARRAY_TASK_ID
 #SBATCH --error=sbl_%A_%a.err
 
-#SBATCH --constraint=cpu # use this if you want to only use cpu
+#SBATCH --constraint=cpu # use this if you want to only use cpu, remove it if you want to use gpu
 
 echo "SLURM_JOBID: " $SLURM_JOBID
 echo "SLURM_ARRAY_JOB_ID: " $SLURM_ARRAY_JOB_ID
