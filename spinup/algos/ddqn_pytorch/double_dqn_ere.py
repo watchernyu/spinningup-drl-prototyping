@@ -368,6 +368,7 @@ def double_dqn_ere(env_id ="PongNoFrameskip-v4", seed = 0, buffer_size = int(1e5
             logger.log_tabular('TotalEnvInteracts', step_idx)
             logger.log_tabular('QVal', with_min_and_max=True)
             logger.log_tabular('Loss', average_only=True)
+            logger.log_tabular('Mem', (process.memory_info().rss / 1e9))
             logger.log_tabular('Time', time.time() - start_time)
             logger.dump_tabular()
 
