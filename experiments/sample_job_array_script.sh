@@ -19,7 +19,7 @@ echo "SLURM_JOBID: " $SLURM_JOBID
 echo "SLURM_ARRAY_JOB_ID: " $SLURM_ARRAY_JOB_ID
 echo "SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
 
-module load anaconda3 cuda/9.0 glfw/3.3 gcc/7.3
+module load anaconda3 cuda/9.0 glfw/3.3 gcc/7.3 mesa/19.0.5 llvm/7.0.1
 source activate rl
 
 echo ${SLURM_ARRAY_TASK_ID}
