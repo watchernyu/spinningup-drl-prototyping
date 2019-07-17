@@ -20,7 +20,7 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
               steps_per_epoch=5000, epochs=100, replay_size=int(1e6), gamma=0.99,
               polyak=0.995, lr=3e-4, alpha=0.2, batch_size=256, start_steps=10000,
               max_ep_len=1000, save_freq=1, dont_save=True, regularization_weight=1e-3,
-              auto_alpha=True, use_one_step_version=False,
+              auto_alpha=True, grad_clip=-1, use_one_step_version=False,
               logger_kwargs=dict(),):
     """
     Largely following OpenAI documentation
@@ -258,6 +258,8 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
 
                 alpha_optim.zero_grad()
                 alpha_loss.backward()
+                if grad_clip > 0:
+                    nn.utils.clip_grad_norm_(log_alpha, grad_clip)
                 alpha_optim.step()
 
                 alpha = log_alpha.exp().item()
@@ -267,14 +269,20 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
             """update networks"""
             q1_optimizer.zero_grad()
             q1_loss.backward()
+            if grad_clip > 0:
+                nn.utils.clip_grad_norm_(q1_net.parameters(), grad_clip)
             q1_optimizer.step()
 
             q2_optimizer.zero_grad()
             q2_loss.backward()
+            if grad_clip > 0:
+                nn.utils.clip_grad_norm_(q2_net.parameters(), grad_clip)
             q2_optimizer.step()
 
             policy_optimizer.zero_grad()
             policy_loss.backward()
+            if grad_clip > 0:
+                nn.utils.clip_grad_norm_(policy_net.parameters(), grad_clip)
             policy_optimizer.step()
 
             # see line 16: update target value network with value network
@@ -371,6 +379,8 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
 
                     alpha_optim.zero_grad()
                     alpha_loss.backward()
+                    if grad_clip > 0:
+                        nn.utils.clip_grad_norm_(log_alpha, grad_clip)
                     alpha_optim.step()
 
                     alpha = log_alpha.exp().item()
@@ -380,14 +390,20 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
                 """update networks"""
                 q1_optimizer.zero_grad()
                 q1_loss.backward()
+                if grad_clip > 0:
+                    nn.utils.clip_grad_norm_(q1_net.parameters(), grad_clip)
                 q1_optimizer.step()
 
                 q2_optimizer.zero_grad()
                 q2_loss.backward()
+                if grad_clip > 0:
+                    nn.utils.clip_grad_norm_(q2_net.parameters(), grad_clip)
                 q2_optimizer.step()
 
                 policy_optimizer.zero_grad()
                 policy_loss.backward()
+                if grad_clip > 0:
+                    nn.utils.clip_grad_norm_(policy_net.parameters(), grad_clip)
                 policy_optimizer.step()
 
                 # see line 16: update target value network with value network

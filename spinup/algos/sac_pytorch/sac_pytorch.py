@@ -12,7 +12,7 @@ from spinup.utils.run_utils import setup_logger_kwargs
 def sac_pytorch(env_fn, hidden_sizes=[256, 256], seed=0,
                 steps_per_epoch=5000, epochs=100, replay_size=int(1e6), gamma=0.99,
                 polyak=0.995, lr=3e-4, alpha=0.2, batch_size=256, start_steps=10000,
-                max_ep_len=1000, save_freq=1, dont_save=True, regularization_weight=1e-3,
+                max_ep_len=1000, save_freq=1, dont_save=True, regularization_weight=1e-3, grad_clip=-1,
                 logger_kwargs=dict(),):
     """
     Largely following OpenAI documentation
@@ -243,18 +243,26 @@ def sac_pytorch(env_fn, hidden_sizes=[256, 256], seed=0,
                 """update networks"""
                 q1_optimizer.zero_grad()
                 q1_loss.backward()
+                if grad_clip > 0:
+                    nn.utils.clip_grad_norm_(q1_net.parameters(), grad_clip)
                 q1_optimizer.step()
 
                 q2_optimizer.zero_grad()
                 q2_loss.backward()
+                if grad_clip > 0:
+                    nn.utils.clip_grad_norm_(q2_net.parameters(), grad_clip)
                 q2_optimizer.step()
 
                 value_optimizer.zero_grad()
                 v_loss.backward()
+                if grad_clip > 0:
+                    nn.utils.clip_grad_norm_(value_net.parameters(), grad_clip)
                 value_optimizer.step()
 
                 policy_optimizer.zero_grad()
                 policy_loss.backward()
+                if grad_clip > 0:
+                    nn.utils.clip_grad_norm_(policy_net.parameters(), grad_clip)
                 policy_optimizer.step()
 
                 # see line 16: update target value network with value network
