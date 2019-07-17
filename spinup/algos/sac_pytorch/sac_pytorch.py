@@ -12,7 +12,7 @@ from spinup.utils.run_utils import setup_logger_kwargs
 def sac_pytorch(env_fn, hidden_sizes=[256, 256], seed=0,
                 steps_per_epoch=5000, epochs=100, replay_size=int(1e6), gamma=0.99,
                 polyak=0.995, lr=3e-4, alpha=0.2, batch_size=256, start_steps=10000,
-                max_ep_len=1000, save_freq=1, dont_save=True, regularization_weight=1e-3, grad_clip=-1,
+                max_ep_len=1000, save_freq=1, dont_save=True, regularization_weight=0, grad_clip=-1,
                 logger_kwargs=dict(),):
     """
     Largely following OpenAI documentation
@@ -234,11 +234,12 @@ def sac_pytorch(env_fn, hidden_sizes=[256, 256], seed=0,
                 they are in the original sac code, see https://github.com/vitchyr/rlkit for reference
                 this part is not necessary but might improve performance
                 """
-                policy_mean_reg_weight = regularization_weight
-                policy_std_reg_weight = regularization_weight
-                mean_reg_loss = policy_mean_reg_weight * (mean_a_tilda ** 2).mean()
-                std_reg_loss = policy_std_reg_weight * (log_std_a_tilda ** 2).mean()
-                policy_loss = policy_loss + mean_reg_loss + std_reg_loss
+                if regularization_weight > 0:
+                    policy_mean_reg_weight = regularization_weight
+                    policy_std_reg_weight = regularization_weight
+                    mean_reg_loss = policy_mean_reg_weight * (mean_a_tilda ** 2).mean()
+                    std_reg_loss = policy_std_reg_weight * (log_std_a_tilda ** 2).mean()
+                    policy_loss = policy_loss + mean_reg_loss + std_reg_loss
 
                 """update networks"""
                 q1_optimizer.zero_grad()
