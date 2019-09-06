@@ -390,6 +390,11 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
                 policy_loss.backward()
                 policy_optimizer.step()
 
+                print(j)
+                for param in policy_net.parameters():
+                    print(param.size())
+                    print(param.data)
+
                 # see line 16: update target value network with value network
                 soft_update_model1_with_model2(q1_target_net, q1_net, polyak)
                 soft_update_model1_with_model2(q2_target_net, q2_net, polyak)
@@ -449,7 +454,7 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env', type=str, default='HalfCheetah-v2')
+    parser.add_argument('--env', type=str, default='Ant-v2')
     parser.add_argument('--hid', type=int, default=256)
     parser.add_argument('--l', type=int, default=2)
     parser.add_argument('--gamma', type=float, default=0.99)

@@ -1,10 +1,3 @@
-*.*~
-__pycache__/
-*.pkl
-data/
-**/*.egg-info
-.python-version
-.idea/
-.vscode/
-test/
-data/
+/plots/*
+/data/*
+AblationstudyReport.*

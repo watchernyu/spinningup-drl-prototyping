@@ -9,7 +9,7 @@
 
 # #SBATCH --gres=gpu:1 # use this line to request for a gpu if your program uses gpu
 
-#SBATCH --array=0-59 # here the number depends on number of jobs in the array
+#SBATCH --array=0-49 # here the number depends on number of jobs in the array
 #SBATCH --output=sbl_%A_%a.out # %A is SLURM_ARRAY_JOB_ID, %a is SLURM_ARRAY_TASK_ID
 #SBATCH --error=sbl_%A_%a.err
 
@@ -19,8 +19,10 @@ echo "SLURM_JOBID: " $SLURM_JOBID
 echo "SLURM_ARRAY_JOB_ID: " $SLURM_ARRAY_JOB_ID
 echo "SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
 
-module load anaconda3 cuda/9.0 glfw/3.3 gcc/7.3
+module load anaconda3 gcc/7.3 glfw/3.3 
+module load mesa/19.0.5
+module load llvm/7.0.1
 source activate rl
 
 echo ${SLURM_ARRAY_TASK_ID}
-python hpc_mujoco_job_array.py --setting ${SLURM_ARRAY_TASK_ID}
+python sample_job_array_grid.py --setting ${SLURM_ARRAY_TASK_ID}

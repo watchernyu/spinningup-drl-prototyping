@@ -13,7 +13,7 @@ if __name__ == '__main__':
     ## MAKE SURE exp name is change, make sure used correct sac function
 
     setting_names = ['env_name', 'seed']
-    settings = [['Humanoid-v2', 'Ant-v2', 'HalfCheetah-v2', 'Hopper-v2', 'Swimmer-v2', 'Walker2d-v2'],
+    settings = [['Humanoid-v2', 'Ant-v2', 'HalfCheetah-v2', 'Hopper-v2', 'Walker2d-v2'],
                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]]
 
 ##########################################DON'T NEED TO MODIFY#######################################
@@ -43,8 +43,8 @@ if __name__ == '__main__':
 ####################################################################################################
 
     ## use eg.add to add parameters in the settings or add parameters tha apply to all jobs
-    eg = ExperimentGrid(name='SAC')
-    eg.add('epochs', 600)
+    eg = ExperimentGrid(name='SAC_vanilla')
+    eg.add('epochs', 200)
     eg.add('steps_per_epoch', 5000)
     eg.add('env_name', actual_setting['env_name'], '', True)
     eg.add('seed', actual_setting['seed'])
