@@ -14,7 +14,7 @@ cd spinningup
 pip install -e .
 ```
 
-The Pytorch version used is: 0.4.1, install pytorch:
+The Pytorch version used is: 1.2, install pytorch:
 https://pytorch.org/
 
 If you want to run Mujoco environments, you need to also install Mujoco and get a liscence. For how to install and run Mujoco on NYU's hpc cluster, check out my other tutorial: https://github.com/watchernyu/hpc_setup
