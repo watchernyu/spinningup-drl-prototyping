@@ -12,7 +12,7 @@ DIV_LINE_WIDTH = 50
 exp_idx = 0
 units = dict()
 
-def plot_data(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1", smooth=1, no_legend=False, legend_loc='best', **kwargs):
+def plot_data(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1", smooth=1, no_legend=False, legend_loc='best', color=None, font_scale=1.5, **kwargs):
     if smooth > 1:
         """
         smooth data with moving window average.
@@ -29,27 +29,13 @@ def plot_data(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1",
 
     if isinstance(data, list):
         data = pd.concat(data, ignore_index=True)
-    sns.set(style="darkgrid", font_scale=1.5)
+    sns.set(style="darkgrid", font_scale=font_scale)
     # sns.set_palette('bright')
 
     print("##############")
-    # print("##############")
-    # xaxis_column_index = data.columns.get_loc(xaxis)
-    # value_column_index = data.columns.get_loc(value)
 
-    # data.index += 1
-    # data['Epoch'] += 1
-    # data = pd.concat([first_row, data])
-
-    # data.iloc[-1] = data.iloc[0]
-    # data[xaxis] += 5000
-    # data.iloc[-1, column_index] = 0
-    #
-    # data = data.sort_index()
-
-    # print(data.loc[0])
-
-    sns.tsplot(data=data, time=xaxis, value=value, unit="Unit", condition=condition, legend=(not no_legend), ci='sd', **kwargs)
+    ## TODO CHANGE BACK
+    sns.tsplot(data=data, time=xaxis, value=value, unit="Unit", condition=condition, legend=(not no_legend), ci='sd', n_boot=0, color=color, **kwargs)
     plt.xlabel('environment interactions')
     plt.ylabel('average test return')
 
@@ -170,7 +156,7 @@ def get_all_datasets(all_logdirs, legend=None, select=None, exclude=None):
 
 def make_plots(all_logdirs, legend=None, xaxis=None, values=None, count=False,  
                font_scale=1.5, smooth=1, select=None, exclude=None, estimator='mean', no_legend=False, legend_loc='best',
-               save_name=None, xlimit=-1):
+               save_name=None, xlimit=-1, color=None):
     data = get_all_datasets(all_logdirs, legend, select, exclude)
     values = values if isinstance(values, list) else [values]
     condition = 'Condition2' if count else 'Condition1'
@@ -178,7 +164,8 @@ def make_plots(all_logdirs, legend=None, xaxis=None, values=None, count=False,
     for value in values:
         plt.figure()
         # plt.figure(figsize=(10, 7))
-        plot_data(data, xaxis=xaxis, value=value, condition=condition, smooth=smooth, no_legend=no_legend, legend_loc=legend_loc, estimator=estimator)
+        plot_data(data, xaxis=xaxis, value=value, condition=condition, smooth=smooth, no_legend=no_legend, legend_loc=legend_loc,
+                  estimator=estimator, color=color, font_scale=font_scale)
         if xlimit > 0:
             plt.xlim(0, xlimit)
 
@@ -204,6 +191,7 @@ def main():
     parser.add_argument('--legend-loc', type=str, default='best')
     parser.add_argument('--save-name', type=str, default=None)
     parser.add_argument('--xlimit', type=int, default=-1)
+    parser.add_argument('--color', '-color', nargs='*')
 
     args = parser.parse_args()
     """
@@ -255,13 +243,20 @@ def main():
             
         no-legend: if specified then no legend will be shown
         
-
+        color: specify colors of your figures, for example add: --color b g
+        will make the first curve blue, second curve green
+        check matplotlib color for more options:
+        https://matplotlib.org/api/_as_gen/matplotlib.pyplot.colors.html
+        you can also use seaborn default colors:
+        'tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan'
+        for example: --color tab:orange tab:blue
+        will make first curve orange, second blue
     """
 
     make_plots(args.logdir, args.legend, args.xaxis, args.value, args.count, 
                smooth=args.smooth, select=args.select, exclude=args.exclude,
                estimator=args.est, no_legend=args.no_legend, legend_loc=args.legend_loc, save_name=args.save_name,
-               xlimit=args.xlimit)
+               xlimit=args.xlimit, color=args.color)
 
 if __name__ == "__main__":
     main()
