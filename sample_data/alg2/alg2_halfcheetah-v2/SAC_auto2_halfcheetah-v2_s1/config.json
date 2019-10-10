@@ -1,0 +1,42 @@
+{
+    "alpha":	0.2,
+    "auto_alpha":	true,
+    "batch_size":	256,
+    "dont_save":	false,
+    "env_fn":	"<function call_experiment.<locals>.thunk_plus.<locals>.<lambda> at 0x7fdf87236158>",
+    "epochs":	600,
+    "exp_name":	"SAC_auto2_halfcheetah-v2",
+    "gamma":	0.99,
+    "hidden_sizes":	[
+        256,
+        256
+    ],
+    "logger":	{
+        "<spinup.utils.logx.EpochLogger object at 0x7fdf871c0dd8>":	{
+            "epoch_dict":	{},
+            "exp_name":	"SAC_auto2_halfcheetah-v2",
+            "first_row":	true,
+            "log_current_row":	{},
+            "log_headers":	[],
+            "output_dir":	"/gpfsnyu/home/cw1681/spinningup/data/SAC_auto2_halfcheetah-v2/SAC_auto2_halfcheetah-v2_s1",
+            "output_file":	{
+                "<_io.TextIOWrapper name='/gpfsnyu/home/cw1681/spinningup/data/SAC_auto2_halfcheetah-v2/SAC_auto2_halfcheetah-v2_s1/progress.txt' mode='w' encoding='UTF-8'>":	{
+                    "mode":	"w"
+                }
+            }
+        }
+    },
+    "logger_kwargs":	{
+        "exp_name":	"SAC_auto2_halfcheetah-v2",
+        "output_dir":	"/gpfsnyu/home/cw1681/spinningup/data/SAC_auto2_halfcheetah-v2/SAC_auto2_halfcheetah-v2_s1"
+    },
+    "lr":	0.0003,
+    "max_ep_len":	1000,
+    "polyak":	0.995,
+    "regularization_weight":	0.001,
+    "replay_size":	1000000,
+    "save_freq":	1,
+    "seed":	1,
+    "start_steps":	10000,
+    "steps_per_epoch":	5000
+}
