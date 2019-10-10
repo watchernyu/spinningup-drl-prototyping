@@ -15,7 +15,7 @@ pip install -e .
 The Pytorch version used is: 1.2, install pytorch:
 https://pytorch.org/
 
-If you want to run Mujoco environments, you need to also install Mujoco and get a liscence. For how to install and run Mujoco on NYU's hpc cluster, check out my other tutorial: https://github.com/watchernyu/hpc_setup
+If you want to run Mujoco environments, you need to also setup Mujoco. For how to install and run Mujoco on NYU's hpc cluster, check out my other tutorial: https://github.com/watchernyu/hpc_setup
 
 ## Run experiment
 The SAC and SAC adaptive implementation can be found under `spinup/algos/sac_pytorch/`
@@ -54,4 +54,4 @@ OpenAI Spinup docs on SAC: https://spinningup.openai.com/en/latest/algorithms/sa
 rlkit sac implementation: https://github.com/vitchyr/rlkit
 
 ## Acknowledgement 
-Great thanks to Josh Achiam, the author of OpenAI Spinning Up. I think the Spinning Up documentation/code is an incredibly good resource for learning DRL and it made my learning much more effective. And also huge thanks for helping me with some Spinup coding issues!
+Great thanks to Josh Achiam, the author of OpenAI Spinning Up for providing the spinup documentation and original codebase. Many thanks to hpc admin Zhiguo for his enormous support.
