@@ -69,6 +69,12 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
 
         logger_kwargs (dict): Keyword args for EpochLogger.
 
+        dont_save (bool): TODO currently don't support save
+
+        grad_clip: whether to use gradient clipping. < 0 means no clipping
+
+        logger_store_freq: how many steps to log debugging info, typically don't need to change
+
     """
 
     """set up logger"""
@@ -304,14 +310,16 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
             We need to save the environment, the state_dict of each network
             and also the state_dict of each optimizer
             """
-            # if not dont_save: TODO save is disabled for now
-            #     sac_state_dict = {'env':env,'policy_net':policy_net.state_dict(),
-            #                     'target_value_net':target_value_net.state_dict(),
-            #                       'q1_net':q1_net.state_dict(), 'q2_net':q2_net.state_dict(),
-            #                       'policy_opt':policy_optimizer, 'value_opt':value_optimizer,
-            #                       'q1_opt':q1_optimizer, 'q2_opt':q2_optimizer}
-            #     if (epoch % save_freq == 0) or (epoch == epochs-1):
-            #         logger.save_state(sac_state_dict, None)
+            # TODO saving has not been fully tested
+            if not dont_save:
+                sac_state_dict = {'env':env,'policy_net':policy_net.state_dict(),
+                                  'q1_net':q1_net.state_dict(), 'q2_net':q2_net.state_dict(),
+                                  'q1_target_net': q1_target_net.state_dict(), 'q2_target_net': q2_target_net.state_dict(),
+                                  'policy_opt':policy_optimizer,
+                                  'q1_opt':q1_optimizer, 'q2_opt':q2_optimizer,
+                                  'log_alpha':log_alpha, 'alpha_opt':alpha_optim, 'target_entropy':target_entropy}
+                if (epoch % save_freq == 0) or (epoch == epochs-1):
+                    logger.save_state(sac_state_dict, None)
 
             # Test the performance of the deterministic version of the agent.
             test_agent()

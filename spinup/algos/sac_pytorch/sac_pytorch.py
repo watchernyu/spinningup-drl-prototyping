@@ -12,7 +12,7 @@ from spinup.utils.run_utils import setup_logger_kwargs
 def sac_pytorch(env_fn, hidden_sizes=[256, 256], seed=0,
                 steps_per_epoch=5000, epochs=100, replay_size=int(1e6), gamma=0.99,
                 polyak=0.995, lr=3e-4, alpha=0.2, batch_size=256, start_steps=10000,
-                max_ep_len=1000, save_freq=1, dont_save=True, regularization_weight=0, grad_clip=-1,
+                max_ep_len=1000, save_freq=1, dont_save=True, grad_clip=-1, logger_store_freq=500,
                 logger_kwargs=dict(),):
     """
     Largely following OpenAI documentation
@@ -68,6 +68,11 @@ def sac_pytorch(env_fn, hidden_sizes=[256, 256], seed=0,
 
         logger_kwargs (dict): Keyword args for EpochLogger.
 
+        dont_save (bool): TODO currently don't support save
+
+        grad_clip: whether to use gradient clipping. < 0 means no clipping
+
+        logger_store_freq: how many steps to log debugging info, typically don't need to change
     """
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("running on device:" ,device)
@@ -228,18 +233,6 @@ def sac_pytorch(env_fn, hidden_sizes=[256, 256], seed=0,
                 """policy loss"""
                 # line 15: note that here we are doing gradient ascent, so we add a minus sign in the front
                 policy_loss = - (q1_a_tilda - alpha*log_prob_a_tilda).mean()
-
-                """
-                add policy regularization loss, this is not in openai's minimal version, but
-                they are in the original sac code, see https://github.com/vitchyr/rlkit for reference
-                this part is not necessary but might improve performance
-                """
-                if regularization_weight > 0:
-                    policy_mean_reg_weight = regularization_weight
-                    policy_std_reg_weight = regularization_weight
-                    mean_reg_loss = policy_mean_reg_weight * (mean_a_tilda ** 2).mean()
-                    std_reg_loss = policy_std_reg_weight * (log_std_a_tilda ** 2).mean()
-                    policy_loss = policy_loss + mean_reg_loss + std_reg_loss
 
                 """update networks"""
                 q1_optimizer.zero_grad()
