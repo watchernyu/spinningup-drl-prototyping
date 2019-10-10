@@ -2,15 +2,13 @@
 Soft Actor-Critic Pytorch Implementation, based on the OpenAI Spinup documentation and some of its code base. This is a minimal, easy-to-learn and well-commented Pytorch implementation, and recommended to be studied along with the OpenAI Spinup Doc. This SAC implementation is based on the OpenAI spinningup repo, and uses spinup as a dependency. Target audience of this repo is Pytorch users (especially NYU students) who are learning Soft Actor-Critic algorithm. 
 
 ## Setup environment:
-To use the code you should first download this repo, and then install spinup:
+To use the code you should first download this repo, and then install this repo with the same method to install the original spinup repo. (So you are using the same method, but you should install this repo, not the original repo.)
 
 the spinup documentation is here, you should read it to make sure you know the procedure: https://spinningup.openai.com/en/latest/user/installation.html
 
-The only difference in installation is you want to install this forked repo, instead of the original repo, so when you are ready to install this in a virtualenv you should run the following commands instead:
+The only difference in installation is you want to install this repo, instead of the original repo, don't download the original repo, use this repo please. When you are ready to install this in a virtualenv (and don't forget to actually enter your virtualenv) you should first clone this repo onto your machine, enter the repo folder, and then use the pip install command: 
 
 ```
-git clone https://github.com/watchernyu/spinningup.git
-cd spinningup
 pip install -e .
 ```
 
@@ -20,13 +18,11 @@ https://pytorch.org/
 If you want to run Mujoco environments, you need to also install Mujoco and get a liscence. For how to install and run Mujoco on NYU's hpc cluster, check out my other tutorial: https://github.com/watchernyu/hpc_setup
 
 ## Run experiment
-The SAC implementation can be found under `spinup/algos/sac_pytorch/`
+The SAC and SAC adaptive implementation can be found under `spinup/algos/sac_pytorch/`
 
 Run experiments with pytorch sac: 
 
 In the sac_pytorch folder, run the SAC code with `python sac_pytorch`
-
-Or you can use a spinup experiment grid: a sample grid is given under `spinningup/experiments/`, you can run it with `python sample_grid.py`
 
 Note: currently there is no parallel running for SAC (also not supported by spinup), so you should always set number of cpu to 1 when you use experiment grid.
 
@@ -38,6 +34,16 @@ https://spinningup.openai.com/en/latest/user/saving_and_loading.html
 
 https://spinningup.openai.com/en/latest/user/plotting.html
 
+Features of original spinup are mostly supported. In addition, we have some new features:
+
+`sample_hpc_scripts` folder contains sample scripts that you can use to run parallel job arrays on the hpc. 
+
+`sample_plot_helper` contains a short sample program that can help you do plotting in a more automatic way. The program can be tested to plot the data in `sample_data`. 
+
+## Changed:
+
+1. plotting now supports specify colors with terminal argument. 
+2. `sample_job_array_grid.py` now is updated, as long as settings are specified, they will be automatically added to experiment, so there will be less problem on forgetting to add setting. 
 
 ## Reference: 
 
@@ -49,26 +55,3 @@ rlkit sac implementation: https://github.com/vitchyr/rlkit
 
 ## Acknowledgement 
 Great thanks to Josh Achiam, the author of OpenAI Spinning Up. I think the Spinning Up documentation/code is an incredibly good resource for learning DRL and it made my learning much more effective. And also huge thanks for helping me with some Spinup coding issues!
-
-Below are original Spinning Up readme
-
-==================================
-
-**Status:** Active (under active development, breaking changes may occur)
-
-Welcome to Spinning Up in Deep RL! 
-==================================
-
-This is an educational resource produced by OpenAI that makes it easier to learn about deep reinforcement learning (deep RL).
-
-For the unfamiliar: [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning) (RL) is a machine learning approach for teaching agents how to solve tasks by trial and error. Deep RL refers to the combination of RL with [deep learning](http://ufldl.stanford.edu/tutorial/).
-
-This module contains a variety of helpful resources, including:
-
-- a short [introduction](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html) to RL terminology, kinds of algorithms, and basic theory,
-- an [essay](https://spinningup.openai.com/en/latest/spinningup/spinningup.html) about how to grow into an RL research role,
-- a [curated list](https://spinningup.openai.com/en/latest/spinningup/keypapers.html) of important papers organized by topic,
-- a well-documented [code repo](https://github.com/openai/spinningup) of short, standalone implementations of key algorithms,
-- and a few [exercises](https://spinningup.openai.com/en/latest/spinningup/exercises.html) to serve as warm-ups.
-
-Get started at [spinningup.openai.com](https://spinningup.openai.com)!
