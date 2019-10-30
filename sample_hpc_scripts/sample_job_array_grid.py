@@ -1,5 +1,5 @@
 from spinup.utils.run_utils import ExperimentGrid
-from spinup.algos.sac_pytorch.sac_pytorch import sac_pytorch ## here make sure you import correct function
+from spinup.algos.sac_pytorch.sac_pytorch import sac_pytorch as function_to_run ## here make sure you import correct function
 import time
 
 """
@@ -27,6 +27,11 @@ if __name__ == '__main__':
     """
     if you are adding more settings, try to add them in a consistent manner in terms of order
     for example, first learning rate, then batch size
+    also make sure in the .sh file you changed the number of jobs in the array
+    if you can't count, then simply run this program and quickly stop it on your machine
+    it will print out how many settings there are
+    then change that line to: 
+    #SBATCH --array=0-<number of jobs - 1>
     """
     setting_names = ['env_name',
                      'seed']
@@ -48,7 +53,7 @@ if __name__ == '__main__':
     for sett in settings:
         total *= len(sett)
 
-    print("total: ", total)
+    print("##### TOTAL NUMBER OF JOBS: %d #####" % total)
 
     def get_setting(setting_number, total, settings, setting_names):
         indexes = []  ## this says which hyperparameter we use
@@ -83,7 +88,7 @@ if __name__ == '__main__':
     eg.add('env_name', actual_setting['env_name'], '', True)
     eg.add('seed', actual_setting['seed'])
 
-    eg.run(sac_pytorch, num_cpu=args.cpu)
+    eg.run(function_to_run, num_cpu=args.cpu)
 
     print('\n###################################### GRID EXP END ######################################')
     print('total time for grid experiment:',time.time()-start_time)
