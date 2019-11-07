@@ -12,7 +12,10 @@ DIV_LINE_WIDTH = 50
 exp_idx = 0
 units = dict()
 
-def plot_data(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1", smooth=1, no_legend=False, legend_loc='best', color=None, font_scale=1.5, **kwargs):
+def plot_data(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1", smooth=1, no_legend=False,
+              legend_loc='best', color=None, font_scale=1.5,
+              label_font_size=24, xlabel=None, ylabel=None,
+              **kwargs):
     if smooth > 1:
         """
         smooth data with moving window average.
@@ -35,9 +38,11 @@ def plot_data(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1",
     print("##############")
 
     ## TODO CHANGE BACK
-    sns.tsplot(data=data, time=xaxis, value=value, unit="Unit", condition=condition, legend=(not no_legend), ci='sd', n_boot=0, color=color, **kwargs)
-    plt.xlabel('environment interactions')
-    plt.ylabel('average test return')
+    sns.tsplot(data=data, time=xaxis, value=value, unit="Unit", condition=condition, legend=(not no_legend), ci='sd', n_boot=0, color=color)
+    xlabel = 'environment interactions' if xlabel is None else xlabel
+    ylabel = 'average test return' if ylabel is None else ylabel
+    plt.xlabel(xlabel, fontsize=label_font_size)
+    plt.ylabel(ylabel, fontsize=label_font_size)
 
     """
     If you upgrade to any version of Seaborn greater than 0.8.1, switch from 
@@ -48,7 +53,7 @@ def plot_data(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1",
     Changes the colorscheme and the default legend style, though.
     """
     if not no_legend:
-        plt.legend(loc=legend_loc).draggable()
+        plt.legend(loc=legend_loc, fontsize=label_font_size).draggable()
 
     """
     For the version of the legend used in the Spinning Up benchmarking page, 
@@ -156,7 +161,7 @@ def get_all_datasets(all_logdirs, legend=None, select=None, exclude=None):
 
 def make_plots(all_logdirs, legend=None, xaxis=None, values=None, count=False,  
                font_scale=1.5, smooth=1, select=None, exclude=None, estimator='mean', no_legend=False, legend_loc='best',
-               save_name=None, xlimit=-1, color=None):
+               save_name=None, xlimit=-1, color=None, label_font_size=24, xlabel=None, ylabel=None):
     data = get_all_datasets(all_logdirs, legend, select, exclude)
     values = values if isinstance(values, list) else [values]
     condition = 'Condition2' if count else 'Condition1'
@@ -165,7 +170,7 @@ def make_plots(all_logdirs, legend=None, xaxis=None, values=None, count=False,
         plt.figure()
         # plt.figure(figsize=(10, 7))
         plot_data(data, xaxis=xaxis, value=value, condition=condition, smooth=smooth, no_legend=no_legend, legend_loc=legend_loc,
-                  estimator=estimator, color=color, font_scale=font_scale)
+                  estimator=estimator, color=color, font_scale=font_scale, label_font_size=label_font_size, xlabel=xlabel, ylabel=ylabel)
         if xlimit > 0:
             plt.xlim(0, xlimit)
 
@@ -192,6 +197,9 @@ def main():
     parser.add_argument('--save-name', type=str, default=None)
     parser.add_argument('--xlimit', type=int, default=-1)
     parser.add_argument('--color', '-color', nargs='*')
+    parser.add_argument('--xlabel', type=str, default=None)
+    parser.add_argument('--ylabel', type=str, default=None)
+    parser.add_argument('--label-font-size', type=float, default=16)
 
     args = parser.parse_args()
     """
@@ -251,12 +259,16 @@ def main():
         'tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan'
         for example: --color tab:orange tab:blue
         will make first curve orange, second blue
+        
+        xlabel: what string to use for x axis label
+        ylabel: what string to use for x axis label
+        label-font-size: will affect x, y label and legend font size
     """
 
     make_plots(args.logdir, args.legend, args.xaxis, args.value, args.count, 
                smooth=args.smooth, select=args.select, exclude=args.exclude,
                estimator=args.est, no_legend=args.no_legend, legend_loc=args.legend_loc, save_name=args.save_name,
-               xlimit=args.xlimit, color=args.color)
+               xlimit=args.xlimit, color=args.color, label_font_size=args.label_font_size, xlabel=args.xlabel, ylabel=args.ylabel)
 
 if __name__ == "__main__":
     main()

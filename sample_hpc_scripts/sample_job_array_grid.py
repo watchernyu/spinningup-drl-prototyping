@@ -27,6 +27,8 @@ if __name__ == '__main__':
     """
     if you are adding more settings, try to add them in a consistent manner in terms of order
     for example, first learning rate, then batch size
+    by default, wherever you put environment, the environment name will arrive at the end of the file name. seed will not
+    show up by default. Your other settings show up in the file name in the same order as they are in the setting_names list
     also make sure in the .sh file you changed the number of jobs in the array
     if you can't count, then simply run this program and quickly stop it on your machine
     it will print out how many settings there are
@@ -34,11 +36,12 @@ if __name__ == '__main__':
     #SBATCH --array=0-<number of jobs - 1>
     """
     setting_names = ['env_name',
-                     'seed']
+                     'seed', 'lr']
     settings = [['Humanoid-v2', 'Ant-v2', 'HalfCheetah-v2', 'Hopper-v2', 'Swimmer-v2', 'Walker2d-v2'],
-               [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]]
-    whether_add_to_savename = [True, False]
-    setting_savename_prefix = ['', '']
+               [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                [0.3, 0.5]]
+    whether_add_to_savename = [True, False, True]
+    setting_savename_prefix = ['', '', 'learning_rate']
 
     n_setting = len(setting_names)
     assert_correct = (len(settings) == n_setting and len(whether_add_to_savename)==n_setting and len(setting_savename_prefix)==n_setting)
@@ -47,6 +50,7 @@ if __name__ == '__main__':
         quit()
 
     ##########################################DON'T NEED TO MODIFY#######################################
+    ##############SIMPLY DON'T MODIFY ANYTHING AFTER THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING########
     ## this block will assign a certain set of setting to a "--setting" number
     ## basically, maps a set of settings to a hpc job array id
     total = 1
@@ -70,16 +74,11 @@ if __name__ == '__main__':
         return indexes, actual_setting
 
     indexes, actual_setting = get_setting(args.setting, total, settings, setting_names)
-    #########################################DON'T NEED TO MODIFY######################################
 
-    ## use eg.add to add parameters in the settings or add parameters tha apply to all jobs
     eg = ExperimentGrid(name=EXPERIMENT_NAME)
-    eg.add('epochs', 600)
-    eg.add('steps_per_epoch', 5000)
-
-    # if actual_setting['env_name'] == 'Humanoid-v2':
-    #     eg.add('alpha',0.05)
-
+    # use eg.add to add parameters in the settings or add parameters tha apply to all jobs
+    # we now automated this part, as long as you added settings correctly into the arrays at the start of this program
+    # they should be added to experiment automatically
     for i in range(len(actual_setting)):
         setting_name = setting_names[i]
         if setting_name != 'env_name' and setting_name != 'seed':
