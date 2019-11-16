@@ -12,7 +12,7 @@ from spinup.utils.run_utils import setup_logger_kwargs
 def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
               steps_per_epoch=5000, epochs=100, replay_size=int(1e6), gamma=0.99,
               polyak=0.995, lr=3e-4, alpha=0.2, batch_size=256, start_steps=10000,
-              max_ep_len=1000, save_freq=1, dont_save=True,
+              max_ep_len=1000, save_freq=1, save_model=False,
               auto_alpha=True, grad_clip=-1, logger_store_freq=500,
               logger_kwargs=dict(),):
     """
@@ -69,7 +69,7 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
 
         logger_kwargs (dict): Keyword args for EpochLogger.
 
-        dont_save (bool): TODO currently don't support save
+        save_model (bool): set to True if want to save the trained agent
 
         grad_clip: whether to use gradient clipping. < 0 means no clipping
 
@@ -310,8 +310,7 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
             We need to save the environment, the state_dict of each network
             and also the state_dict of each optimizer
             """
-            # TODO saving has not been fully tested
-            if not dont_save:
+            if save_model:
                 sac_state_dict = {'env':env,'policy_net':policy_net.state_dict(),
                                   'q1_net':q1_net.state_dict(), 'q2_net':q2_net.state_dict(),
                                   'q1_target_net': q1_target_net.state_dict(), 'q2_target_net': q2_target_net.state_dict(),
@@ -320,6 +319,7 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
                                   'log_alpha':log_alpha, 'alpha_opt':alpha_optim, 'target_entropy':target_entropy}
                 if (epoch % save_freq == 0) or (epoch == epochs-1):
                     logger.save_state(sac_state_dict, None)
+            # use joblib.load(fname) to load
 
             # Test the performance of the deterministic version of the agent.
             test_agent()
