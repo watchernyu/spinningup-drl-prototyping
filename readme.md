@@ -15,6 +15,8 @@ pip install -e .
 The Pytorch version used is: 1.2, install pytorch:
 https://pytorch.org/
 
+tensorflow might be needed, install version 1.12.0
+
 If you want to run Mujoco environments, you need to also setup Mujoco. For how to install and run Mujoco on NYU's hpc cluster, check out my other tutorial: https://github.com/watchernyu/hpc_setup
 
 ## Run experiment
