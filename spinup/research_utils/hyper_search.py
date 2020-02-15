@@ -1,10 +1,15 @@
-import seaborn as sns
 import pandas as pd
-import matplotlib.pyplot as plt
 import json
 import os
 import os.path as osp
 import numpy as np
+
+"""
+python /home/watcher/Desktop/spinningup-drl-prototyping/spinup/research_utils/hyper_search.py 
+make a file that can order the experiments in terms of their performance
+use this to easily find good hyperparameters when doing hyperparameter search
+upload this file when it's ready don't use it again lol 
+"""
 
 DIV_LINE_WIDTH = 50
 
@@ -12,11 +17,10 @@ DIV_LINE_WIDTH = 50
 exp_idx = 0
 units = dict()
 
-
-def plot_data(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1", smooth=1, no_legend=False,
-              legend_loc='best', color=None, linestyle=None, font_scale=1.5,
-              label_font_size=24, xlabel=None, ylabel=None,
-              **kwargs):
+def compute_hyper(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1", smooth=1, no_legend=False,
+                  legend_loc='best', color=None, linestyle=None, font_scale=1.5,
+                  label_font_size=24, xlabel=None, ylabel=None, after_epoch=0,
+                  **kwargs):
     if smooth > 1:
         """
         smooth data with moving window average.
@@ -33,52 +37,33 @@ def plot_data(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1",
 
     if isinstance(data, list):
         data = pd.concat(data, ignore_index=True)
-    sns.set(style="darkgrid", font_scale=font_scale)
-    # sns.set_palette('bright')
+    # print("columns", data.columns)
+    unique_names = data[condition].unique() ## these are the experiment names
 
-    print("##############")
+    n_settings = len(unique_names)
+    score_list = np.zeros(n_settings)
+    print(score_list)
+    for i in range(n_settings):
+        un = unique_names[i]
+        print("\nunique name: ",un)
+        exp_data = data.loc[data[condition] == un] ## the data related to this experiment
+        # average_test_epret = exp_data['AverageTestEpRet'].values
+        # print(average_test_epret.shape)
 
-    ## TODO CHANGE BACK
-    ax = sns.tsplot(data=data, time=xaxis, value=value, unit="Unit", condition=condition, legend=(not no_legend), ci='sd',
-               n_boot=0, color=color)
-    if linestyle is not None:
-        for i in range(len(linestyle)):
-            ax.lines[i].set_linestyle(linestyle[i])
-
-    print("yoooooooooo", len(ax.lines))
-
-    print("COLOR",color)
-    xlabel = 'environment interactions' if xlabel is None else xlabel
-    ylabel = 'average test return' if ylabel is None else ylabel
-    plt.xlabel(xlabel, fontsize=label_font_size)
-    plt.ylabel(ylabel, fontsize=label_font_size)
-
+        # final performance data only concern the last few epoches
+        final_performance_data = exp_data.loc[exp_data['Epoch'] >= after_epoch]
+        average_test_epret_final = final_performance_data['AverageTestEpRet'].values
+        hyper_setting_score = average_test_epret_final.mean()
+        score_list[i] = hyper_setting_score
+        print(hyper_setting_score)
     """
-    If you upgrade to any version of Seaborn greater than 0.8.1, switch from 
-    tsplot to lineplot replacing L29 with:
-
-        sns.lineplot(data=data, x=xaxis, y=value, hue=condition, ci='sd', **kwargs)
-
-    Changes the colorscheme and the default legend style, though.
+    here we want to give an ordering of the hyper-settings, so that we can know
+    which ones are good hyper-parameters 
     """
-    if not no_legend:
-        plt.legend(loc=legend_loc, fontsize=label_font_size)
-
-    """
-    For the version of the legend used in the Spinning Up benchmarking page, 
-    swap L38 with:
-
-    plt.legend(loc='upper center', ncol=6, handlelength=1,
-               mode="expand", borderaxespad=0., prop={'size': 13})
-    """
-
-    xscale = np.max(np.asarray(data[xaxis])) > 5e3
-    if xscale:
-        # Just some formatting niceness: x-axis scale in scientific notation if max x is large
-        plt.ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
-
-    plt.tight_layout(pad=0.5)
-
+    sorted_index =np.flip(np.argsort(score_list))
+    for i in range(n_settings):
+        setting_index = sorted_index[i]
+        print('%s\t%.1f' % (unique_names[setting_index], score_list[setting_index]))
 
 def get_datasets(logdir, condition=None):
     """
@@ -171,28 +156,18 @@ def get_all_datasets(all_logdirs, legend=None, select=None, exclude=None):
 
 def make_plots(all_logdirs, legend=None, xaxis=None, values=None, count=False,
                font_scale=1.5, smooth=1, select=None, exclude=None, estimator='mean', no_legend=False,
-               legend_loc='best',
+               legend_loc='best', after_epoch=0,
                save_name=None, xlimit=-1, color=None, linestyle=None, label_font_size=24, xlabel=None, ylabel=None):
     data = get_all_datasets(all_logdirs, legend, select, exclude)
     values = values if isinstance(values, list) else [values]
     condition = 'Condition2' if count else 'Condition1'
     estimator = getattr(np, estimator)  # choose what to show on main curve: mean? max? min?
     for value in values:
-        plt.figure()
-        # plt.figure(figsize=(10, 7))
-        plot_data(data, xaxis=xaxis, value=value, condition=condition, smooth=smooth, no_legend=no_legend,
-                  legend_loc=legend_loc,
-                  estimator=estimator, color=color, linestyle=linestyle, font_scale=font_scale, label_font_size=label_font_size,
-                  xlabel=xlabel, ylabel=ylabel)
-        if xlimit > 0:
-            plt.xlim(0, xlimit)
-
-    if save_name is not None:
-        fig = plt.gcf()
-        fig.savefig(save_name)
-    else:
-        plt.show()
-
+        compute_hyper(data, xaxis=xaxis, value=value, condition=condition, smooth=smooth, no_legend=no_legend,
+                      legend_loc=legend_loc,
+                      estimator=estimator, color=color, linestyle=linestyle, font_scale=font_scale,
+                      label_font_size=label_font_size,
+                      xlabel=xlabel, ylabel=ylabel, after_epoch=after_epoch)
 
 def main():
     import argparse
@@ -206,15 +181,7 @@ def main():
     parser.add_argument('--select', nargs='*')
     parser.add_argument('--exclude', nargs='*')
     parser.add_argument('--est', default='mean')
-    parser.add_argument('--no-legend', action='store_true')
-    parser.add_argument('--legend-loc', type=str, default='best')
-    parser.add_argument('--save-name', type=str, default=None)
-    parser.add_argument('--xlimit', type=int, default=-1)
-    parser.add_argument('--color', '-color', nargs='*')
-    parser.add_argument('--linestyle', '-linestyle', nargs='*')
-    parser.add_argument('--xlabel', type=str, default=None)
-    parser.add_argument('--ylabel', type=str, default=None)
-    parser.add_argument('--label-font-size', type=float, default=16)
+    parser.add_argument('--after-epoch', '-ae', type=int, default=0)
 
     args = parser.parse_args()
     """
@@ -264,31 +231,15 @@ def main():
         exclude (strings): Optional exclusion rule: plotter will only show 
             curves from logdirs that do not contain these substrings.
 
-        no-legend: if specified then no legend will be shown
-
-        color: specify colors of your figures, for example add: --color b g
-        will make the first curve blue, second curve green
-        check matplotlib color for more options:
-        https://matplotlib.org/api/_as_gen/matplotlib.pyplot.colors.html
-        you can also use seaborn default colors:
-        'tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan'
-        for example: --color tab:orange tab:blue
-        will make first curve orange, second blue
-        
-        linestyle: specify linestyle, for example: --linestyle solid dashed
-        this is similar to color. Make sure the order is correct. 
-
-        xlabel: what string to use for x axis label
-        ylabel: what string to use for x axis label
-        label-font-size: will affect x, y label and legend font size
+        after-epoch: if > 0 then when computing an algorithm's "score", 
+            we will use the average of test returns after a certain epoch number
     """
 
     make_plots(args.logdir, args.legend, args.xaxis, args.value, args.count,
                smooth=args.smooth, select=args.select, exclude=args.exclude,
-               estimator=args.est, no_legend=args.no_legend, legend_loc=args.legend_loc, save_name=args.save_name,
-               xlimit=args.xlimit, color=args.color, linestyle=args.linestyle, label_font_size=args.label_font_size, xlabel=args.xlabel,
-               ylabel=args.ylabel)
+               estimator=args.est, after_epoch=args.after_epoch)
 
 
 if __name__ == "__main__":
     main()
+
