@@ -14,6 +14,9 @@
 # #SBATCH --gres=gpu:1 # uncomment this line to request for a gpu if your program uses gpu
 #SBATCH --constraint=cpu # use this if you want to only use cpu
 
+# the sleep command will help with hpc issues when you have many jobs loading same files
+sleep $(( (RANDOM%10) + 1 ))
+
 echo "SLURM_JOBID: " $SLURM_JOBID
 echo "SLURM_ARRAY_JOB_ID: " $SLURM_ARRAY_JOB_ID
 echo "SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID

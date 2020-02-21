@@ -5,7 +5,7 @@ import os.path as osp
 import numpy as np
 
 """
-python /home/watcher/Desktop/spinningup-drl-prototyping/spinup/research_utils/hyper_search.py 
+python -m spinup.run hyper_search <files> -ae <start from which epoch>
 make a file that can order the experiments in terms of their performance
 use this to easily find good hyperparameters when doing hyperparameter search
 upload this file when it's ready don't use it again lol 
@@ -19,7 +19,7 @@ units = dict()
 
 def compute_hyper(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1", smooth=1, no_legend=False,
                   legend_loc='best', color=None, linestyle=None, font_scale=1.5,
-                  label_font_size=24, xlabel=None, ylabel=None, after_epoch=0,
+                  label_font_size=24, xlabel=None, ylabel=None, after_epoch=0, no_order=False,
                   **kwargs):
     if smooth > 1:
         """
@@ -42,6 +42,7 @@ def compute_hyper(data, xaxis='Epoch', value="AverageEpRet", condition="Conditio
 
     n_settings = len(unique_names)
     score_list = np.zeros(n_settings)
+    std_list = np.zeros(n_settings)
     print(score_list)
     for i in range(n_settings):
         un = unique_names[i]
@@ -53,17 +54,25 @@ def compute_hyper(data, xaxis='Epoch', value="AverageEpRet", condition="Conditio
         # final performance data only concern the last few epoches
         final_performance_data = exp_data.loc[exp_data['Epoch'] >= after_epoch]
         average_test_epret_final = final_performance_data['AverageTestEpRet'].values
-        hyper_setting_score = average_test_epret_final.mean()
-        score_list[i] = hyper_setting_score
-        print(hyper_setting_score)
+        mean_score = average_test_epret_final.mean()
+        std_score = average_test_epret_final.std()
+        score_list[i] = mean_score
+        std_list[i] = std_score
+        epoch_reached = final_performance_data['Epoch'].max()
+        if np.isnan(mean_score):
+            print('n/a')
+        else:
+            print('total epoch: %d, score: %.2f' % (epoch_reached,mean_score))
     """
     here we want to give an ordering of the hyper-settings, so that we can know
     which ones are good hyper-parameters 
     """
     sorted_index =np.flip(np.argsort(score_list))
+    if no_order:
+        sorted_index = np.arange(len(sorted_index))
     for i in range(n_settings):
         setting_index = sorted_index[i]
-        print('%s\t%.1f' % (unique_names[setting_index], score_list[setting_index]))
+        print('%s\t%.1f\t%.1f' % (unique_names[setting_index], score_list[setting_index], std_list[setting_index]))
 
 def get_datasets(logdir, condition=None):
     """
@@ -93,13 +102,16 @@ def get_datasets(logdir, condition=None):
             unit = units[condition1]
             units[condition1] += 1
 
-            exp_data = pd.read_table(os.path.join(root, 'progress.txt'))
-            performance = 'AverageTestEpRet' if 'AverageTestEpRet' in exp_data else 'AverageEpRet'
-            exp_data.insert(len(exp_data.columns), 'Unit', unit)
-            exp_data.insert(len(exp_data.columns), 'Condition1', condition1)
-            exp_data.insert(len(exp_data.columns), 'Condition2', condition2)
-            exp_data.insert(len(exp_data.columns), 'Performance', exp_data[performance])
-            datasets.append(exp_data)
+            try:
+                exp_data = pd.read_table(os.path.join(root, 'progress.txt'))
+                performance = 'AverageTestEpRet' if 'AverageTestEpRet' in exp_data else 'AverageEpRet'
+                exp_data.insert(len(exp_data.columns), 'Unit', unit)
+                exp_data.insert(len(exp_data.columns), 'Condition1', condition1)
+                exp_data.insert(len(exp_data.columns), 'Condition2', condition2)
+                exp_data.insert(len(exp_data.columns), 'Performance', exp_data[performance])
+                datasets.append(exp_data)
+            except Exception as e:
+                print(e)
     return datasets
 
 
@@ -153,11 +165,12 @@ def get_all_datasets(all_logdirs, legend=None, select=None, exclude=None):
             data += get_datasets(log)
     return data
 
-
-def make_plots(all_logdirs, legend=None, xaxis=None, values=None, count=False,
-               font_scale=1.5, smooth=1, select=None, exclude=None, estimator='mean', no_legend=False,
-               legend_loc='best', after_epoch=0,
-               save_name=None, xlimit=-1, color=None, linestyle=None, label_font_size=24, xlabel=None, ylabel=None):
+def compare_performance(all_logdirs, legend=None, xaxis=None, values=None, count=False,
+                        font_scale=1.5, smooth=1, select=None, exclude=None, estimator='mean', no_legend=False,
+                        legend_loc='best', after_epoch=0,
+                        save_name=None, xlimit=-1, color=None, linestyle=None, label_font_size=24,
+                        xlabel=None, ylabel=None,
+                        no_order=False):
     data = get_all_datasets(all_logdirs, legend, select, exclude)
     values = values if isinstance(values, list) else [values]
     condition = 'Condition2' if count else 'Condition1'
@@ -167,7 +180,7 @@ def make_plots(all_logdirs, legend=None, xaxis=None, values=None, count=False,
                       legend_loc=legend_loc,
                       estimator=estimator, color=color, linestyle=linestyle, font_scale=font_scale,
                       label_font_size=label_font_size,
-                      xlabel=xlabel, ylabel=ylabel, after_epoch=after_epoch)
+                      xlabel=xlabel, ylabel=ylabel, after_epoch=after_epoch, no_order=no_order)
 
 def main():
     import argparse
@@ -182,6 +195,7 @@ def main():
     parser.add_argument('--exclude', nargs='*')
     parser.add_argument('--est', default='mean')
     parser.add_argument('--after-epoch', '-ae', type=int, default=0)
+    parser.add_argument('-no', '--no-order', action='store_true')
 
     args = parser.parse_args()
     """
@@ -233,11 +247,13 @@ def main():
 
         after-epoch: if > 0 then when computing an algorithm's "score", 
             we will use the average of test returns after a certain epoch number
+            
+        no-order: have this option so it doesn't print setting names in order of performance
     """
 
-    make_plots(args.logdir, args.legend, args.xaxis, args.value, args.count,
-               smooth=args.smooth, select=args.select, exclude=args.exclude,
-               estimator=args.est, after_epoch=args.after_epoch)
+    compare_performance(args.logdir, args.legend, args.xaxis, args.value, args.count,
+                        smooth=args.smooth, select=args.select, exclude=args.exclude,
+                        estimator=args.est, after_epoch=args.after_epoch, no_order=args.no_order)
 
 
 if __name__ == "__main__":

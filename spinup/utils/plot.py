@@ -36,18 +36,12 @@ def plot_data(data, xaxis='Epoch', value="AverageEpRet", condition="Condition1",
     sns.set(style="darkgrid", font_scale=font_scale)
     # sns.set_palette('bright')
 
-    print("##############")
-
-    ## TODO CHANGE BACK
     ax = sns.tsplot(data=data, time=xaxis, value=value, unit="Unit", condition=condition, legend=(not no_legend), ci='sd',
                n_boot=0, color=color)
     if linestyle is not None:
         for i in range(len(linestyle)):
             ax.lines[i].set_linestyle(linestyle[i])
 
-    print("yoooooooooo", len(ax.lines))
-
-    print("COLOR",color)
     xlabel = 'environment interactions' if xlabel is None else xlabel
     ylabel = 'average test return' if ylabel is None else ylabel
     plt.xlabel(xlabel, fontsize=label_font_size)
@@ -169,10 +163,11 @@ def get_all_datasets(all_logdirs, legend=None, select=None, exclude=None):
     return data
 
 
-def make_plots(all_logdirs, legend=None, xaxis=None, values=None, count=False,
+def make_plots(all_logdirs, legend=None, xaxis='TotalEnvInteracts', values='Performance', count=False,
                font_scale=1.5, smooth=1, select=None, exclude=None, estimator='mean', no_legend=False,
                legend_loc='best',
-               save_name=None, xlimit=-1, color=None, linestyle=None, label_font_size=24, xlabel=None, ylabel=None):
+               save_name=None, save_path = None,
+               xlimit=-1, color=None, linestyle=None, label_font_size=16, xlabel=None, ylabel=None):
     data = get_all_datasets(all_logdirs, legend, select, exclude)
     values = values if isinstance(values, list) else [values]
     condition = 'Condition2' if count else 'Condition1'
@@ -189,10 +184,9 @@ def make_plots(all_logdirs, legend=None, xaxis=None, values=None, count=False,
 
     if save_name is not None:
         fig = plt.gcf()
-        fig.savefig(save_name)
+        fig.savefig(os.path.join(save_path, save_name))
     else:
         plt.show()
-
 
 def main():
     import argparse
@@ -209,6 +203,7 @@ def main():
     parser.add_argument('--no-legend', action='store_true')
     parser.add_argument('--legend-loc', type=str, default='best')
     parser.add_argument('--save-name', type=str, default=None)
+    parser.add_argument('--save-path', type=str, default=None)
     parser.add_argument('--xlimit', type=int, default=-1)
     parser.add_argument('--color', '-color', nargs='*')
     parser.add_argument('--linestyle', '-linestyle', nargs='*')
@@ -285,7 +280,8 @@ def main():
 
     make_plots(args.logdir, args.legend, args.xaxis, args.value, args.count,
                smooth=args.smooth, select=args.select, exclude=args.exclude,
-               estimator=args.est, no_legend=args.no_legend, legend_loc=args.legend_loc, save_name=args.save_name,
+               estimator=args.est, no_legend=args.no_legend, legend_loc=args.legend_loc,
+               save_name=args.save_name, save_path=args.save_path,
                xlimit=args.xlimit, color=args.color, linestyle=args.linestyle, label_font_size=args.label_font_size, xlabel=args.xlabel,
                ylabel=args.ylabel)
 
