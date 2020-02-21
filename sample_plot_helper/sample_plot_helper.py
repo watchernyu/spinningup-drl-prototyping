@@ -39,6 +39,6 @@ for e in envnames: # make one plot for each environment
         dataname = '%s_%s-v2/' % (alg_name, e)
         datapath = os.path.join(data_path_prefix, folder_name, dataname)
         datapaths.append(datapath)
-    save_name = 'sample_plot_savename_%s' % (e)
+    save_name = 'sample_plot_%s' % (e)
     make_plots(datapaths, xaxis=xaxis, values=value, legend_loc=legend_loc,
                label_font_size=label_font_size, save_path=save_path, save_name=save_name)
