@@ -58,6 +58,9 @@ if __name__ == '__main__':
         total *= len(sett)
 
     print("##### TOTAL NUMBER OF JOBS: %d #####" % total)
+    if args.setting >= (total):
+        print("setting number is larger than total number of setting, quit now")
+        quit()
 
     def get_setting(setting_number, total, settings, setting_names):
         indexes = []  ## this says which hyperparameter we use
