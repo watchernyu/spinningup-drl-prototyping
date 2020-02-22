@@ -15,7 +15,7 @@ pip install -e .
 The Pytorch version used is: 1.2, install pytorch:
 https://pytorch.org/
 
-tensorflow might be needed, install version 1.12.0
+tensorflow might be needed, install version 1.12.0. If you see a lot of tensorflow dtype warning, downgrade numpy: https://github.com/tensorflow/tensorflow/issues/31249. If you installed numpy through conda, use conda to install that version of numpy, `conda install numpy==1.16.4` or if you used pip, `pip install numpy==1.16.4`. If you don't know what that means, uninstall numpy then install `conda install numpy==1.16.4`. For a better understanding of pip and conda: https://www.anaconda.com/understanding-conda-and-pip/
 
 If you want to run Mujoco environments, you need to also setup Mujoco. For how to install and run Mujoco on NYU's hpc cluster, check out my other tutorial: https://github.com/watchernyu/hpc_setup
 
