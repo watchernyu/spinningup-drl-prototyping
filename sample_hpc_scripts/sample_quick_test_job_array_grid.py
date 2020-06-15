@@ -46,17 +46,19 @@ if __name__ == '__main__':
                      'steps_per_epoch',
                      'start_steps',
                      'hidden_sizes',
-                     'batch_size']
+                     'batch_size',
+                     'max_ep_len']
     settings = [['HalfCheetah-v2', ],
                [0, 1],
                 [3],
-                [1000],
-                [1000],
+                [100],
+                [100],
                 [(2, 2)],
-                [2]
+                [2],
+                [100]
                 ]
-    whether_add_to_savename = [True, False, True, True, True, True, True]
-    setting_savename_prefix = ['', '', 'ep', 'spe', 'ss', '', 'bs']
+    whether_add_to_savename = [True, False, True, True, True, True, True, True]
+    setting_savename_prefix = ['', '', 'ep', 'spe', 'ss', '', 'bs', 'ml']
 
     n_setting = len(setting_names)
     assert_correct = (len(settings) == n_setting and len(whether_add_to_savename)==n_setting and len(setting_savename_prefix)==n_setting)
