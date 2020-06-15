@@ -6,13 +6,19 @@ To use the code you should first download this repo, and then install this repo 
 
 the spinup documentation is here, you should read it to make sure you know the procedure: https://spinningup.openai.com/en/latest/user/installation.html
 
-The only difference in installation is you want to install this repo, instead of the original repo, don't download the original repo, use this repo please. When you are ready to install this in a virtualenv (and don't forget to actually enter your virtualenv) you should first clone this repo onto your machine, enter the repo folder, and then use the pip install command: 
+The only difference in installation is you want to install this repo, instead of the original repo, don't download the original repo, use this repo please. When you are ready to install this in a virtualenv (and don't forget to actually enter your virtualenv) you should first clone this repo onto your machine, enter the repo folder, and then use the pip install command (assuming your have a conda virtualenv with the name "rl"): 
 
 ```
+git clone https://github.com/watchernyu/spinningup-drl-prototyping.git
+cd spinningup-drl-prototyping
+source activate rl 
+pip install numpy==1.16.4
+pip install tensorflow==1.12.0
+pip install seaborn==0.8.1
 pip install -e .
 ```
 
-The Pytorch version used is: 1.2, install pytorch:
+The Pytorch version used is: 1.2 (1.2-1.5 might all work), install pytorch:
 https://pytorch.org/
 
 seaborn: 0.8.1
@@ -45,6 +51,10 @@ Features of original spinup are mostly supported. In addition, we have some new 
 `sample_hpc_scripts` folder contains sample scripts that you can use to run parallel job arrays on the hpc. 
 
 `sample_plot_helper` contains a short sample program that can help you do plotting in a more automatic way. The program can be tested to plot the data in `sample_data`. 
+
+`sample_quick_test_job_array_grid.py` and `sample_quick_test_job_array_script.sh` are similar but run very quick jobs that are good for testing your environment setup. 
+
+After you get the results (by default they show up in a folder called data), you can then use `python -m spinup.run plot <your data folder name>`. For example, if your folder name is "sac", then you should do `python -m spinup.run plot sac/`, make sure the name has that slash and it's not `python -m spinup.run plot sac`. 
 
 ## Changed:
 
