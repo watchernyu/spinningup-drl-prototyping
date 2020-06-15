@@ -10,6 +10,7 @@ you can do a quick test on your own machine before you upload to hpc
 |||||||||||||||||||||||||||||||||
 VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 """
+save_data_dir = '../data'
 
 EXPERIMENT_NAME = 'SAC'
 
@@ -40,12 +41,22 @@ if __name__ == '__main__':
     #SBATCH --array=0-<number of jobs - 1>
     """
     setting_names = ['env_name',
-                     'seed', 'lr']
-    settings = [['Humanoid-v2', 'Ant-v2', 'HalfCheetah-v2', 'Hopper-v2', 'Swimmer-v2', 'Walker2d-v2'],
-               [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-                [0.3, 0.5]]
-    whether_add_to_savename = [True, False, True]
-    setting_savename_prefix = ['', '', 'learning_rate']
+                     'seed',
+                     'epochs',
+                     'steps_per_epoch',
+                     'start_steps',
+                     'hidden_sizes',
+                     'batch_size']
+    settings = [['HalfCheetah-v2', ],
+               [0, 1],
+                [3],
+                [1000],
+                [1000],
+                [(2, 2)],
+                [2]
+                ]
+    whether_add_to_savename = [True, False, True, True, True, True, True]
+    setting_savename_prefix = ['', '', 'ep', 'spe', 'ss', '', 'bs']
 
     n_setting = len(setting_names)
     assert_correct = (len(settings) == n_setting and len(whether_add_to_savename)==n_setting and len(setting_savename_prefix)==n_setting)

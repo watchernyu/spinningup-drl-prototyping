@@ -8,11 +8,12 @@ import time
 from spinup.algos.sac_pytorch.core import TanhGaussianPolicy, Mlp, soft_update_model1_with_model2, ReplayBuffer
 from spinup.utils.logx import EpochLogger
 from spinup.utils.run_utils import setup_logger_kwargs
+import os, sys
 
 def sac_pytorch(env_fn, hidden_sizes=[256, 256], seed=0,
                 steps_per_epoch=5000, epochs=100, replay_size=int(1e6), gamma=0.99,
                 polyak=0.995, lr=3e-4, alpha=0.2, batch_size=256, start_steps=10000,
-                max_ep_len=1000, save_freq=1, save_model=False, grad_clip=-1, logger_store_freq=500,
+                max_ep_len=1000, save_freq=1, save_model=False, grad_clip=-1, logger_store_freq=100,
                 logger_kwargs=dict(),):
     """
     Largely following OpenAI documentation
@@ -314,6 +315,7 @@ def sac_pytorch(env_fn, hidden_sizes=[256, 256], seed=0,
             logger.log_tabular('LossV', average_only=True)
             logger.log_tabular('Time', time.time()-start_time)
             logger.dump_tabular()
+            sys.stdout.flush()
 
 
 if __name__ == '__main__':

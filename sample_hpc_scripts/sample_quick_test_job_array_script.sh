@@ -7,7 +7,7 @@
 #SBATCH --mail-type=ALL # select which email types will be sent
 #SBATCH --mail-user=email@address # put your email here if you want emails
 
-#SBATCH --array=0-59 # here the number depends on number of jobs in the array
+#SBATCH --array=0-1 # here the number depends on number of jobs in the array
 #SBATCH --output=run_%A_%a.out # %A is SLURM_ARRAY_JOB_ID, %a is SLURM_ARRAY_TASK_ID
 #SBATCH --error=run_%A_%a.err
 
@@ -15,7 +15,7 @@
 #SBATCH --constraint=cpu # use this if you want to only use cpu
 
 # the sleep command will help with hpc issues when you have many jobs loading same files
-sleep $(( (RANDOM%10) + 1 ))
+# sleep $(( (RANDOM%10) + 1 ))
 
 echo "SLURM_JOBID: " $SLURM_JOBID
 echo "SLURM_ARRAY_JOB_ID: " $SLURM_ARRAY_JOB_ID
@@ -26,4 +26,4 @@ source deactivate
 source activate rl
 
 echo ${SLURM_ARRAY_TASK_ID}
-python sample_job_array_grid.py --setting ${SLURM_ARRAY_TASK_ID}
+python sample_quick_test_job_array_grid.py --setting ${SLURM_ARRAY_TASK_ID}

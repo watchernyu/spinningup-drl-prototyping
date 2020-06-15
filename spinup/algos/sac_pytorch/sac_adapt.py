@@ -8,12 +8,13 @@ import time
 from spinup.algos.sac_pytorch.core_auto import TanhGaussianPolicySACAdapt, Mlp, soft_update_model1_with_model2, ReplayBuffer
 from spinup.utils.logx import EpochLogger
 from spinup.utils.run_utils import setup_logger_kwargs
+import os, sys
 
 def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
-              steps_per_epoch=5000, epochs=100, replay_size=int(1e6), gamma=0.99,
+              steps_per_epoch=5000, epochs=200, replay_size=int(1e6), gamma=0.99,
               polyak=0.995, lr=3e-4, alpha=0.2, batch_size=256, start_steps=10000,
               max_ep_len=1000, save_freq=1, save_model=False,
-              auto_alpha=True, grad_clip=-1, logger_store_freq=500,
+              auto_alpha=True, grad_clip=-1, logger_store_freq=100,
               logger_kwargs=dict(),):
     """
     Largely following OpenAI documentation
@@ -341,6 +342,7 @@ def sac_adapt(env_fn, hidden_sizes=[256, 256], seed=0,
             logger.log_tabular('LossQ2', average_only=True)
             logger.log_tabular('Time', time.time()-start_time)
             logger.dump_tabular()
+            sys.stdout.flush()
 
 if __name__ == '__main__':
     import argparse
@@ -350,7 +352,7 @@ if __name__ == '__main__':
     parser.add_argument('--l', type=int, default=2)
     parser.add_argument('--gamma', type=float, default=0.99)
     parser.add_argument('--seed', '-s', type=int, default=0)
-    parser.add_argument('--epochs', type=int, default=600)
+    parser.add_argument('--epochs', type=int, default=200)
     parser.add_argument('--exp_name', type=str, default='sac')
     parser.add_argument('--data_dir', type=str, default='data/')
     parser.add_argument('--steps_per_epoch', type=int, default=5000)
