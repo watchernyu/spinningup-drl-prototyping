@@ -27,12 +27,6 @@ Some of the above commands are not necessary if you are an expert. But they migh
 The Pytorch version used is: 1.2 (1.2-1.5 might all work), install pytorch:
 https://pytorch.org/
 
-seaborn: 0.8.1
-
-tensorflow might be needed, *you might mistakenly install a newer version of tensorflow, which might cause error*. You should install version 1.12.0 with this command: `pip install tensorflow==1.12.0`. Check if your spinup installed correctly by entering python and run `import spinup`. 
-
-After you are able to run algorithms, if you see a lot of tensorflow dtype warning, you might need to also downgrade numpy: https://github.com/tensorflow/tensorflow/issues/31249. If you installed numpy through conda, use conda to install that version of numpy, `conda install numpy==1.16.4` or if you used pip, `pip install numpy==1.16.4`. If you don't know what that means, uninstall numpy then install `conda install numpy==1.16.4`. For a better understanding of pip and conda: https://www.anaconda.com/understanding-conda-and-pip/
-
 If you want to run Mujoco environments, you need to also setup Mujoco. For how to install and run Mujoco on NYU's hpc cluster, check out my other tutorial: https://github.com/watchernyu/hpc_setup
 
 ## Run experiment
