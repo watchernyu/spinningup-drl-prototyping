@@ -12,11 +12,17 @@ The only difference in installation is you want to install this repo, instead of
 git clone https://github.com/watchernyu/spinningup-drl-prototyping.git
 cd spinningup-drl-prototyping
 source activate rl 
+pip uninstall numpy
+pip uninstall numpy
+conda uninstall numpy
+conda uninstall numpy
 pip install numpy==1.16.4
 pip install tensorflow==1.12.0
 pip install seaborn==0.8.1
 pip install -e .
 ```
+
+Some of the above commands are not necessary if you are an expert. But they might help you if you are a beginner...
 
 The Pytorch version used is: 1.2 (1.2-1.5 might all work), install pytorch:
 https://pytorch.org/
