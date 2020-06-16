@@ -8,6 +8,7 @@ the spinup documentation is here, you should read it to make sure you know the p
 
 The only difference in installation is you want to install this repo, instead of the original repo, don't download the original repo, use this repo please. When you are ready to install this in a virtualenv (and don't forget to actually enter your virtualenv) you should first clone this repo onto your machine, enter the repo folder, and then use the pip install command (assuming your have a conda virtualenv with the name "rl"): 
 
+On Windows and linux:
 ```
 git clone https://github.com/watchernyu/spinningup-drl-prototyping.git
 cd spinningup-drl-prototyping
@@ -19,6 +20,23 @@ conda uninstall numpy
 pip install numpy==1.16.4
 pip install tensorflow==1.12.0
 pip install seaborn==0.8.1
+conda install pytorch==1.2.0 torchvision==0.4.0 cpuonly -c pytorch
+pip install -e .
+```
+
+On OSX: 
+```
+git clone https://github.com/watchernyu/spinningup-drl-prototyping.git
+cd spinningup-drl-prototyping
+source activate rl 
+pip uninstall numpy
+pip uninstall numpy
+conda uninstall numpy
+conda uninstall numpy
+pip install numpy==1.16.4
+pip install tensorflow==1.12.0
+pip install seaborn==0.8.1
+conda install pytorch==1.2.0 torchvision==0.4.0 -c pytorch
 pip install -e .
 ```
 
