@@ -8,29 +8,41 @@ the spinup documentation is here, you should read it to make sure you know the p
 
 The only difference in installation is you want to install this repo, instead of the original repo, don't download the original repo, use this repo please. When you are ready to install this in a virtualenv (and don't forget to actually enter your virtualenv) you should first clone this repo onto your machine, enter the repo folder, and then use the pip install command (assuming your have a conda virtualenv with the name "rl"): 
 
-On Windows and linux:
+Intall MuJoCo, gym, and other dependencies, and this repository: 
+
+On Linux:
+Go to a place on your machine where you can put python files. (for example, desktop or home, or create a folder), make sure you have Anaconda on your machine, then run the following commands in your terminal, which will create a conda environment called rl and then install for you:
+
 ```
-conda install pytorch==1.2.0 torchvision==0.4.0 cpuonly -c pytorch
+conda create -n rl python=3.6
+source activate rl 
+conda install -y pytorch==1.2.0 torchvision==0.4.0 cpuonly -c pytorch
+git clone https://github.com/openai/gym.git
+cd gym
+git checkout a4adef2
+pip install -e .
+cd ..  
+git clone https://github.com/openai/mujoco-py
+cd mujoco-py
+git checkout 498b451
+pip install -e . --no-cache
+pip install -r requirements.txt
+pip install -r requirements.dev.txt
+cd ..
 git clone https://github.com/watchernyu/spinningup-drl-prototyping.git
 cd spinningup-drl-prototyping
-source activate rl 
 pip install numpy==1.16.4
 pip install tensorflow==1.12.0
 pip install seaborn==0.8.1
 pip install -e .
 ```
 
-On OSX: 
+On OSX, replace the line that install pytorch with following: 
 ```
 conda install pytorch==1.2.0 torchvision==0.4.0 -c pytorch
-git clone https://github.com/watchernyu/spinningup-drl-prototyping.git
-cd spinningup-drl-prototyping
-source activate rl 
-pip install numpy==1.16.4
-pip install tensorflow==1.12.0
-pip install seaborn==0.8.1
-pip install -e .
 ```
+
+For MuJoCo you will need to download the MuJoCo files for your system, and then have a license. 
 
 Some of the above commands are not necessary if you are an expert. But they might help you if you are a beginner...
 
