@@ -1,55 +1,83 @@
 # Soft Actor-Critic Pytorch Implementation
-Soft Actor-Critic Pytorch Implementation, based on the OpenAI Spinup documentation and some of its code base. This is a minimal, easy-to-learn and well-commented Pytorch implementation, and recommended to be studied along with the OpenAI Spinup Doc. This SAC implementation is based on the OpenAI spinningup repo, and uses spinup as a dependency. Target audience of this repo is Pytorch users (especially NYU students) who are learning Soft Actor-Critic algorithm. 
+Soft Actor-Critic Pytorch Implementation, based on the OpenAI Spinup documentation and some of its code base. This is a minimal, easy-to-learn and well-commented Pytorch implementation, and recommended to be studied along with the OpenAI Spinup Doc. This SAC implementation is based on the OpenAI spinningup repo, and uses spinup as a dependency. Target audience of this repo is Pytorch users (especially NYU students) who are learning DRL.
 
 ## Setup environment:
-To use the code you should first download this repo, and then install this repo with the same method to install the original spinup repo. (So you are using the same method, but you should install this repo, not the original repo.)
+Make sure Go to a place on your machine where you can put python files. (for example, desktop or home, or create a folder), make sure you have Anaconda on your machine, then run the following commands in your terminal, which will create a conda environment called rl and then install for you:
 
-the spinup documentation is here, you should read it to make sure you know the procedure: https://spinningup.openai.com/en/latest/user/installation.html
+If `source activate drl` does not work, you should try `conda activate drl`. You might want to run these commands one line at a time. Or if you konw what you are doing and you have setup certain required system packages correctly already, you can run multiple lines at a time. But please do spend a little time think about what you are doing by running that line, for example, `cd ..` will let you go to the parent folder's directory, so if you are in a location where you can download files, you run some commands, then you move to another location, and run another terminal, and you didn't change the current directory, and you also run the exact next command, without thinking about what is happening, then things will go wrong. 
 
-The only difference in installation is you want to install this repo, instead of the original repo, don't download the original repo, use this repo please. When you are ready to install this in a virtualenv (and don't forget to actually enter your virtualenv) you should first clone this repo onto your machine, enter the repo folder, and then use the pip install command (assuming your have a conda virtualenv with the name "rl"): 
+## Note: download and installation can take some time.
+It can take some time, especially for pytorch and tensorflow installation part. You can install them in the background, and when one step is finished, move on to the next. 
 
-Intall MuJoCo, gym, and other dependencies, and this repository: 
+## First we create a new conda environment 
+If `conda activate drl` does not work, then try `source activate drl`. 
 
-On Linux:
-Go to a place on your machine where you can put python files. (for example, desktop or home, or create a folder), make sure you have Anaconda on your machine, then run the following commands in your terminal, which will create a conda environment called rl and then install for you:
+If you are installing on the NYU Shanghai hpc, you first need to apply for an account, then you will use `ssh <netid>@hpc.shanghai.nyu.edu` to connect to the hpc, replace `<netid>` with your own netid. You can only access the hpc with this command when you are inside NYU network (using nyu wifi, or using nyu vpn). When you are connected, first run `module load anaconda3` so you have anaconda3. If you are using your own machine, you need to install anaconda on your own machine. 
 
+On Linux and Windows (Note, for our test environments, Windows is not well supported, so will be problematic, consider use a ubuntu virtual machine):
 ```
-conda create -n rl python=3.6
-source activate rl 
-conda install -y pytorch==1.2.0 torchvision==0.4.0 cpuonly -c pytorch
+conda create -n drl python=3.6
+conda activate drl 
+conda install pytorch==1.3.1 torchvision==0.4.2 cudatoolkit=10.1 -c pytorch
+```
+
+On OSX: 
+```
+conda create -n drl python=3.6
+conda activate drl 
+conda install pytorch==1.3.1 torchvision==0.4.2 -c pytorch
+```
+
+## Then we download and install gym and mujoco-py. 
+These are python packages, they provide the simulated environments where we test DRL agents. Make sure your terminal's current location is at a place where you can find, and where you have space to download some stuff. Note I have a `cd ..` in between installing these 2 packages, please don't install a package inside the folder of another. 
+```
 git clone https://github.com/openai/gym.git
 cd gym
-git checkout a4adef2
 pip install -e .
-cd ..  
+cd ..
 git clone https://github.com/openai/mujoco-py
 cd mujoco-py
-git checkout 498b451
 pip install -e . --no-cache
-pip install -r requirements.txt
-pip install -r requirements.dev.txt
 cd ..
+```
+
+## Set up MuJoCo 
+Openai gym has a number of environments to test on, we want to test on a list of robotic environments that are called MuJoCo environments. For these to work, we also need to download the MuJoCo physics engine. Go to this website `https://www.roboti.us/index.html`, and download the mujoco files for your operating system. For example, if you are on mac, click `mujoco200 macos`. We need to put these files to the correct location so that the python package `mujoco-py` can work, and then we can use those environments in `gym`. You will also need a license, ask your TA for the license. The instructions are given on this page `https://github.com/openai/mujoco-py`, basically, if you use linux or mac, (copy-pasted from that page), Unzip the downloaded `mujoco200` directory into `~/.mujoco/mujoco200`, and place your license key (the `mjkey.txt`) at `~/.mujoco/mjkey.txt`. 
+
+## Test MuJoCo
+Now before we move on, we want to test if MuJoCo works. Run python (make sure you are still in that drl virtual env), after you entered python:
+```
+import gym
+import mujoco_py
+```
+You will see some warning messages, that is ok. But if you see an error, then something is wrong. If you do not see an error, only warnings, or no warnings, then proceed to initialize a gym MuJoCo environment: 
+```
+e = gym.make('Ant-v2')
+e.reset()
+```
+The output should be a numpy array of numbers. If you can reach this step, then your gym and MuJoCo part should be correctly installed. For a better understanding of gym, look at this page `https://gym.openai.com/`. 
+
+You might run into problems, you might try consult the openai gym github page or the mujoco-py github page. They have a list of known problems and potential solutions. 
+
+## Download and install this particular repository. 
+If you are still in python from last step, then use `quit()`, or use the shortcut Ctrl+D to exit python and return to your terminal. We will now download and install some other packages. This repo is based on the openai spinup repo. We have added the pytorch version of the SAC algorithm and some hpc sample scripts etc. Make sure your terminal's current location is not inside a package folder, you can use `cd ..` to move to the parent folder. Now run the commands to download and install this repo:
+
+```
 git clone https://github.com/watchernyu/spinningup-drl-prototyping.git
 cd spinningup-drl-prototyping
 pip install numpy==1.16.4
 pip install tensorflow==1.12.0
 pip install seaborn==0.8.1
 pip install -e .
+cd ..
 ```
 
-On OSX, replace the line that install pytorch with following: 
+## Test SAC 
+Now you have both the environment and the pytorch code for an SAC agent, make sure your current location is at the folder that contains `spinningup-drl-prototyping`, and run the following command for a quick test: 
 ```
-conda install pytorch==1.2.0 torchvision==0.4.0 -c pytorch
+cd spinningup-drl-prototyping/spinup/algos/sac_pytorch
+python sac_adapt.py --hid 4 --steps_per_epoch 1000 --epochs 2
 ```
-
-For MuJoCo you will need to download the MuJoCo files for your system, and then have a license. 
-
-Some of the above commands are not necessary if you are an expert. But they might help you if you are a beginner...
-
-The Pytorch version used is: 1.2 (1.2-1.5 might all work), install pytorch:
-https://pytorch.org/
-
-If you want to run Mujoco environments, you need to also setup Mujoco. For how to install and run Mujoco on NYU's hpc cluster, check out my other tutorial: https://github.com/watchernyu/hpc_setup
 
 ## Run experiment
 The SAC and SAC adaptive implementation can be found under `spinup/algos/sac_pytorch/`
@@ -97,5 +125,3 @@ https://www.anaconda.com/blog/using-pip-in-a-conda-environment
 
 ## Acknowledgement 
 Great thanks to Josh Achiam, the author of OpenAI Spinning Up for providing the spinup documentation and original codebase. Many thanks to hpc admin Zhiguo for his enormous support.
-
-
