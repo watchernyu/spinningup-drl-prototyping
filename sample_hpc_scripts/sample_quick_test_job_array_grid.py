@@ -1,5 +1,5 @@
 from spinup.utils.run_utils import ExperimentGrid
-from spinup.algos.sac_pytorch.sac_adapt import sac_adapt as function_to_run ## here make sure you import correct function
+from spinup.algos.sac_pytorch.sac_adapt_fast import sac_adapt_fast     as function_to_run ## here make sure you import correct function
 import time
 
 """
@@ -10,7 +10,6 @@ you can do a quick test on your own machine before you upload to hpc
 |||||||||||||||||||||||||||||||||
 VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 """
-save_data_dir = '../data'
 
 EXPERIMENT_NAME = 'SAC'
 

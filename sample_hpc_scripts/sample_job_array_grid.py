@@ -1,5 +1,5 @@
 from spinup.utils.run_utils import ExperimentGrid
-from spinup.algos.sac_pytorch.sac_adapt import sac_adapt as function_to_run ## here make sure you import correct function
+from spinup.algos.sac_pytorch.sac_adapt_fast import sac_adapt_fast as function_to_run ## here make sure you import correct function
 import time
 
 """
