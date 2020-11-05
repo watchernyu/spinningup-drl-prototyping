@@ -118,6 +118,19 @@ python -m spinup.run plot -s 10 alg1data/alg1_ant-v2/ alg2data/alg2_ant-v2/ --le
 
 Notice how you can change things such as color, label, legend with different optional arguments. Our plotting method is based on the Spinningup plot function, which is documented here: https://spinningup.openai.com/en/latest/user/plotting.html. You can also check the source code to see what options are available. 
 
+## Setup on HPC
+After you login to the HPC, you will now be on a login node, we will download and install python packages on this node, then test somewhere else. First load anaconda3 and some other modules:
+```
+module load anaconda3
+module load cuda/9.0 glfw/3.3 gcc/7.3 mesa/19.0.5 llvm/7.0.1
+```
+Then you can proceed to perform the same installation process. Except that you need the linux mujoco files. You can install filezilla: https://filezilla-project.org/ and use it to transfer files between your machine and the hpc. 
+
+After you installed everything, use this command to start an interactive shell on a non-login node: 
+`srun -p aquila --pty --mem  5000 -t 0-01:00 bash`
+Now perform the tests (import mujoco, run sac etc.) here. 
+
+
 ## Changed:
 
 Now by default use `sac_adapt_fast.py`, which takes one udpate after each data collection. This is more consistent with SAC paper and might be more robust. 
