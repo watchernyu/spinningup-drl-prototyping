@@ -130,6 +130,8 @@ After you installed everything, use this command to start an interactive shell o
 `srun -p aquila --pty --mem  5000 -t 0-01:00 bash`
 Now perform the tests (import mujoco, run sac etc.) here. 
 
+Note: if you are submitting jobs using sbatch, make sure you deactivate your environment, or simply log out and log in again before submitting the job. 
+
 
 ## Changed:
 
