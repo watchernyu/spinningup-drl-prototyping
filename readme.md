@@ -106,10 +106,21 @@ Features of original spinup are mostly supported. In addition, we have some new 
 
 After you get the results (by default they show up in a folder called data), you can then use `python -m spinup.run plot <your data folder name>`. For example, if your folder name is "sac", then you should do `python -m spinup.run plot sac/`, make sure the name has that slash and it's not `python -m spinup.run plot sac`. 
 
+## Try plotting
+Go to the `sample_data` folder, and you can test the plotting functionality. Start a terminal and run the following commands (skip the first line if you are already in the virtualenv):
+
+```
+conda activate drl
+python -m spinup.run plot alg1data/alg1_ant-v2/ alg1data/alg1_halfcheetah-v2/ alg2data/alg2_ant-v2/ alg2data/alg2_halfcheetah-v2/
+python -m spinup.run plot -s 10 alg1data/alg1_ant-v2/ alg2data/alg2_ant-v2/ --legend algorithm1 algorithm2 --color tab:orange tab:blue --value Performance --xlabel timestep --ylabel Performance
+python -m spinup.run plot -s 10 alg1data/alg1_ant-v2/ alg2data/alg2_ant-v2/ --legend alg1 alg2 --color red blue --value AverageQ1Vals --xlabel timestep --ylabel QValue
+```
+
+Notice how you can change things such as color, label, legend with different optional arguments. Our plotting method is based on the Spinningup plot function, which is documented here: https://spinningup.openai.com/en/latest/user/plotting.html. You can also check the source code to see what options are available. 
+
 ## Changed:
 
-1. plotting now supports specify colors with terminal argument. 
-2. `sample_job_array_grid.py` now is updated, as long as settings are specified, they will be automatically added to experiment, so there will be less problem on forgetting to add setting. 
+Now by default use `sac_adapt_fast.py`, which takes one udpate after each data collection. This is more consistent with SAC paper and might be more robust. 
 
 ## Reference: 
 
