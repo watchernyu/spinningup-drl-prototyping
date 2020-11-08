@@ -148,5 +148,12 @@ Best practice for install conda and pip environments...
 https://www.anaconda.com/blog/using-pip-in-a-conda-environment
 "using pip only after all other requirements have been installed via conda is the safest practice."
 
+## Fixes
+Some **mac** users will run into gcc error. First check your gcc version: `gcc --version`. gcc-6 is the version that works. gcc-4 and gcc-7 seem to fail (not sure why gcc 7 works on linux but fails on mac??). Now check if you have a gcc-6, if not you need to install via brew. Even if you have one, it might not be your default gcc. Now you want to make that your default gcc. Create a symbolic link so that your gcc points to gcc-6. Here is a tutorial on how symbolic link works: https://www.youtube.com/watch?v=-edTHKZdkjo start from 4:25. Basically the command is something similar to:  
+```
+cd /usr/local/bin
+ln -s gcc-6 gcc
+```
+
 ## Acknowledgement 
 Great thanks to Josh Achiam, the author of OpenAI Spinning Up for providing the spinup documentation and original codebase. Many thanks to hpc admin Zhiguo for his enormous support.
