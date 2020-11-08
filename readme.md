@@ -127,8 +127,7 @@ module load cuda/9.0 glfw/3.3 gcc/7.3 mesa/19.0.5 llvm/7.0.1
 Then you can proceed to perform the same installation process. Except that you need the linux mujoco files. You can install filezilla: https://filezilla-project.org/ and use it to transfer files between your machine and the hpc. To connect to the hpc via Filezilla, open the site manager (its icon is typically at the top left corner of the window), add a new site: set Host = `hpc.shanghai.nyu.edu`, port = `22`, protocol: `SFTP`, Logon Type:`Normal`, and enter your NYU credentials. Later on you can also add bookmarks so that you can easily go to certain commonly-used locations on the hpc. You can also use quickconnect. 
 
 After you installed everything, use this command to start an interactive shell on a non-login node: 
-`srun -p aquila --pty --mem  5000 -t 0-01:00 bash`
-Now perform the tests (import mujoco, run sac etc.) here. 
+`srun -p aquila --pty --mem  5000 -t 0-01:00 bash`, now you will be in one of the non-login nodes, these nodes don't have internet connection so you cannot download stuff, but you can perform test here, now use `source deactive` to deactivate your virtual environment, then you can active your environment, and then perform the tests (import mujoco, run sac etc.) here. 
 
 Note: if you are submitting jobs using sbatch, make sure you deactivate your environment, or simply log out and log in again before submitting the job. 
 
