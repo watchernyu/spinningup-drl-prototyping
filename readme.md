@@ -42,7 +42,7 @@ cd ..
 ```
 
 ## Set up MuJoCo 
-Openai gym has a number of environments to test on, we want to test on a list of robotic environments that are called MuJoCo environments. For these to work, we also need to download the MuJoCo physics engine. Go to this website `https://www.roboti.us/index.html`, and download the mujoco files for your operating system. For example, if you are on mac, click `mujoco200 macos`. We need to put these files to the correct location so that the python package `mujoco-py` can work, and then we can use those environments in `gym`. You will also need a license, ask your TA for the license. The instructions are given on this page `https://github.com/openai/mujoco-py`, basically, if you use linux or mac, (copy-pasted from that page), Unzip the downloaded `mujoco200` directory into `~/.mujoco/mujoco200`, and place your license key (the `mjkey.txt`) at `~/.mujoco/mjkey.txt`. 
+Openai gym has a number of environments to test on, we want to test on a list of robotic environments that are called MuJoCo environments. For these to work, we also need to download the MuJoCo physics engine. Go to this website `https://www.roboti.us/index.html`, and download the mujoco files for your operating system. For example, if you are on mac, click `mujoco200 macos`. We need to put these files to the correct location so that the python package `mujoco-py` can work, and then we can use those environments in `gym`. You will also need a license, ask your TA for the license. The instructions are given on this page `https://github.com/openai/mujoco-py`, basically, if you use linux or mac, (copy-pasted from that page), Unzip the downloaded `mujoco200` directory into `~/.mujoco/mujoco200`, and place your license key (the `mjkey.txt` or `authorized_keys`) in the folder `~/.mujoco/`. So in the end, under the folder `~/.mujoco/`, you should have a mujoco key file, and then also the folder `mujoco200`. 
 
 ## Test MuJoCo
 Now before we move on, we want to test if MuJoCo works. Run python (make sure you are still in that drl virtual env), after you entered python:
@@ -124,7 +124,7 @@ After you login to the HPC, you will now be on a login node, we will download an
 module load anaconda3
 module load cuda/9.0 glfw/3.3 gcc/7.3 mesa/19.0.5 llvm/7.0.1
 ```
-Then you can proceed to perform the same installation process. Except that you need the linux mujoco files. You can install filezilla: https://filezilla-project.org/ and use it to transfer files between your machine and the hpc. 
+Then you can proceed to perform the same installation process. Except that you need the linux mujoco files. You can install filezilla: https://filezilla-project.org/ and use it to transfer files between your machine and the hpc. To connect to the hpc via Filezilla, open the site manager (its icon is typically at the top left corner of the window), add a new site: set Host = `hpc.shanghai.nyu.edu`, port = `22`, protocol: `SFTP`, Logon Type:`Normal`, and enter your NYU credentials. Later on you can also add bookmarks so that you can easily go to certain commonly-used locations on the hpc. You can also use quickconnect. 
 
 After you installed everything, use this command to start an interactive shell on a non-login node: 
 `srun -p aquila --pty --mem  5000 -t 0-01:00 bash`
