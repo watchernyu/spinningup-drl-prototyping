@@ -173,7 +173,7 @@ Essentially you want to install the following file:
 Install Microsoft Visual C++ Build Tools 2015: https://download.microsoft.com/download/5/f/7/5f7acaeb-8363-451f-9425-68a90f98b238/visualcppbuildtools_full.exe?fixForIE=.exe
 
 ### hpc missing patchelf
-Simply install patchelf.
+Simply install patchelf. Make sure your conda environment is activated, try this command: `conda install -c anaconda patchelf`. 
 
 ### hpc: an error telling you to add a line to .bashrc
 Simply do what the instructions tell you. Find that file and add that line. You can use export or nano, if you don't know what these are, you can use filezilla to connect, and once you connect, you can try to find that file (the file is located at `/gpfsnyu/home/netid`, which is precisely the default location after you connected to the hpc). This is your home directory on the hpc, and in the terminal you can use `cd ~` to go to the same place. You can send this file back to your local machine, edit it with any text editor, and then send it back to the hpc to overwrite it. 
