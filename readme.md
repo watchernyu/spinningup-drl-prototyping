@@ -131,6 +131,7 @@ After you installed everything, use this command to start an interactive shell o
 
 Note: if you are submitting jobs using sbatch, make sure you deactivate your environment, or simply log out and log in again before submitting the job. 
 
+For a list of common commands, check `commonly_used_hpc_commands.txt`.
 
 ## Changed:
 
