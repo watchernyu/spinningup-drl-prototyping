@@ -83,11 +83,6 @@ def sac_adapt_fast(env_fn, hidden_sizes=[256, 256], seed=0,
         logger_store_freq: how many steps to log debugging info, typically don't need to change
 
     """
-    hidden_sizes = [2,2,]
-    epochs = 3
-    batch_size = 2
-    start_steps = 1000
-
     """set up logger"""
     logger = EpochLogger(**logger_kwargs)
     logger.save_config(locals())
