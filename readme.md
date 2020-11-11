@@ -76,7 +76,7 @@ cd ..
 Now you have both the environment and the pytorch code for an SAC agent, make sure your current location is at the folder that contains `spinningup-drl-prototyping`, and run the following command for a quick test: 
 ```
 cd spinningup-drl-prototyping/spinup/algos/sac_pytorch
-python sac_adapt.py --hid 4 --steps_per_epoch 1000 --epochs 2
+python sac_adapt_fast.py --hid 4 --steps_per_epoch 1000 --epochs 2
 ```
 
 ## Run experiment
@@ -175,6 +175,11 @@ Install Microsoft Visual C++ Build Tools 2015: https://download.microsoft.com/do
 
 ### hpc missing patchelf
 Simply install patchelf. Make sure your conda environment is activated, try this command: `conda install -c anaconda patchelf`. 
+
+If you see warnings, or a message telling you to update conda, ignore it, if it asks you whether you want to install, choose yes and wait for the installation to finish. 
+
+### hpc error after Oct 2020
+When you install spinning up, you might see this: `ERROR: After October 2020 you may experience errors when installing or updating packages. This is because pip will change the way that it resolves dependency conflicts.` Ignore it. 
 
 ### hpc: an error telling you to add a line to .bashrc
 Simply do what the instructions tell you. Find that file and add that line. You can use export or nano, if you don't know what these are, you can use filezilla to connect, and once you connect, you can try to find that file (the file is located at `/gpfsnyu/home/netid`, which is precisely the default location after you connected to the hpc). This is your home directory on the hpc, and in the terminal you can use `cd ~` to go to the same place. You can send this file back to your local machine, edit it with any text editor, and then send it back to the hpc to overwrite it. 
